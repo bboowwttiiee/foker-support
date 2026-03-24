@@ -16,6 +16,8 @@
       --accent-blue: #2388ff;
       --accent-orange: #ff9b2f;
       --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      --pill: rgba(255,255,255,0.06);
+      --pill-active: rgba(255,255,255,0.14);
     }
 
     * {
@@ -24,16 +26,16 @@
 
     html, body {
       margin: 0;
-      min-height: 100%;
+      min-height: 100vh;
+    }
+
+    body {
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", sans-serif;
       color: var(--text);
       background:
         radial-gradient(circle at top left, rgba(255,255,255,0.06), transparent 35%),
         radial-gradient(circle at bottom right, rgba(255,255,255,0.04), transparent 30%),
         linear-gradient(180deg, var(--bg2), var(--bg));
-    }
-
-    body {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -55,11 +57,18 @@
       -webkit-backdrop-filter: blur(10px);
     }
 
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
     .brand {
       display: inline-flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 24px;
       padding: 10px 14px;
       border-radius: 999px;
       background: rgba(255,255,255,0.06);
@@ -89,6 +98,33 @@
     .cards span:nth-child(1) { left: 0; top: 2px; transform: rotate(-16deg); }
     .cards span:nth-child(2) { left: 8px; top: 0; }
     .cards span:nth-child(3) { left: 16px; top: 2px; transform: rotate(16deg); }
+
+    .lang-switch {
+      display: inline-flex;
+      gap: 6px;
+      padding: 6px;
+      border-radius: 999px;
+      background: var(--pill);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .lang-switch button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .lang-switch button.active {
+      background: var(--pill-active);
+      color: var(--text);
+    }
 
     h1 {
       margin: 0 0 12px;
@@ -169,6 +205,15 @@
       background: var(--accent-orange);
     }
 
+    [data-lang-content] {
+      display: none;
+    }
+
+    html[lang="en"] [data-lang-content="en"],
+    html[lang="ru"] [data-lang-content="ru"] {
+      display: block;
+    }
+
     @media (min-width: 720px) {
       .card {
         padding: 48px;
@@ -182,40 +227,71 @@
         grid-column: 1 / -1;
       }
     }
+
+    @media (max-width: 560px) {
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card">
-      <div class="brand">
-        <div class="cards">
-          <span></span>
-          <span></span>
-          <span></span>
+      <div class="topbar">
+        <div class="brand">
+          <div class="cards">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          Foker Support
         </div>
-        Foker Support
+
+        <div class="lang-switch" aria-label="Language switcher">
+          <button id="lang-en" class="active" type="button">EN</button>
+          <button id="lang-ru" type="button">RU</button>
+        </div>
       </div>
 
-      <h1>Need help?</h1>
-      <p class="subtitle">
-        If you found a bug, have a question, or want to share feedback about Foker, use the contact details below.
-      </p>
+      <div data-lang-content="en">
+        <h1>Need help?</h1>
+        <p class="subtitle">
+          If you found a bug, have a question, or want to share feedback about Foker, use the contact details below.
+        </p>
+      </div>
+
+      <div data-lang-content="ru">
+        <h1>Нужна помощь?</h1>
+        <p class="subtitle">
+          Если ты нашёл баг, хочешь задать вопрос или оставить отзыв о Foker, используй контакты ниже.
+        </p>
+      </div>
 
       <div class="grid">
         <div class="item">
-          <h2>Email</h2>
+          <h2 data-lang-content="en">Email</h2>
+          <h2 data-lang-content="ru">Почта</h2>
           <p><a href="mailto:bowtie.developer@gmail.com">bowtie.developer@gmail.com</a></p>
         </div>
 
         <div class="item">
-          <h2>App</h2>
+          <h2 data-lang-content="en">App</h2>
+          <h2 data-lang-content="ru">Приложение</h2>
           <p>Foker</p>
         </div>
 
         <div class="item full">
-          <h2>About</h2>
-          <p>
+          <h2 data-lang-content="en">About</h2>
+          <h2 data-lang-content="ru">О приложении</h2>
+
+          <p data-lang-content="en">
             Foker is a card game that blends the flow of Durak with poker hand mechanics, flexible modes, and bots that can fill empty seats.
+          </p>
+
+          <p data-lang-content="ru">
+            Foker — карточная игра, которая сочетает ритм Дурака с механикой покерных комбинаций, разными режимами и ботами, которые могут занимать пустые места.
           </p>
         </div>
       </div>
@@ -225,10 +301,29 @@
         <span></span>
       </div>
 
-      <div class="footer">
-        © 2026 Igor Bukalov
-      </div>
+      <div class="footer">© 2026 bowtie</div>
     </div>
   </div>
+
+  <script>
+    const html = document.documentElement;
+    const enBtn = document.getElementById('lang-en');
+    const ruBtn = document.getElementById('lang-ru');
+
+    function setLang(lang) {
+      html.lang = lang;
+      enBtn.classList.toggle('active', lang === 'en');
+      ruBtn.classList.toggle('active', lang === 'ru');
+      localStorage.setItem('foker-support-lang', lang);
+    }
+
+    enBtn.addEventListener('click', () => setLang('en'));
+    ruBtn.addEventListener('click', () => setLang('ru'));
+
+    const savedLang = localStorage.getItem('foker-support-lang');
+    if (savedLang === 'ru' || savedLang === 'en') {
+      setLang(savedLang);
+    }
+  </script>
 </body>
 </html>
